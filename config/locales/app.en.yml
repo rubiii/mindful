@@ -1,0 +1,62 @@
+---
+en:
+  activerecord:
+    attributes:
+      user:
+        locale: Language
+  admin:
+    users:
+      create:
+        success: User was created.
+      destroy:
+        failure: User could not be deleted.
+        success: User was deleted.
+      edit:
+        title: Edit User
+      form:
+        cancel: Cancel
+        invite_user: Invite user via email
+      index:
+        add_user: Add User
+        all: All
+        filter_by_account_state: Filter by Status
+        th:
+          account_state: Status
+          actions: Actions
+          email: Email
+          locale: Language
+          role: Role
+      new:
+        title: Add User
+      update:
+        success: User was updated.
+      user:
+        account_state:
+          active: Active
+          active_password_reset: Active password reset
+          confirmation_pending: Confirmation pending
+          invitation_pending: Invitation pending
+          locked: Locked
+        confirm_delete: Please confirm to delete the user with email »%{email}«.
+        delete: Delete
+        edit: Edit
+  header:
+    sign_out: Sign out
+    theme_toggle: Toggle theme
+  locales:
+    de: German
+    en: English
+  roles:
+    admin: Admin
+    user: User
+  shared:
+    confirm_modal:
+      aria_close: Close dialog
+      cancel: Cancel
+      confirm: Confirm
+      title: Confirm action
+    modal:
+      aria_close: Close dialog
+    theme_toggle:
+      aria_switch_to_dark: Switch to dark mode
+      aria_switch_to_light: Switch to light mode

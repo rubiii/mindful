@@ -1,0 +1,4 @@
+<% flash.now[:notice] = t(".success") %>
+<%= turbo_stream.append "flash", partial: "shared/flash" %>
+<%= turbo_stream.prepend "users", @user %>
+<%= turbo_stream.update "modal", "" %>

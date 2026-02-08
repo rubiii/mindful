@@ -1,0 +1,21 @@
+<h1 class="title is-2"><%= t(".sign_in") %></h1>
+
+<%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+  <div class="block">
+    <%= f.input :email,
+                autofocus: true,
+                input_html: { autocomplete: "email" } %>
+    <%= f.input :password,
+                input_html: { autocomplete: "current-password" } %>
+
+    <% if devise_mapping.rememberable? %>
+      <%= f.input :remember_me, as: :boolean, wrapper: :h_bool %>
+    <% end %>
+  </div>
+
+  <div class="block">
+    <%= f.button :submit, t(".sign_in"), class: "is-primary" %>
+  </div>
+
+  <%= render "devise/shared/links" %>
+<% end %>

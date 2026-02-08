@@ -1,0 +1,29 @@
+<%# locals: (user:) %>
+
+<%= simple_form_for [:admin, user] do |f| %>
+  <section class="modal-card-body">
+    <%= f.error_notification %>
+
+    <%= f.input :email, required: true, autofocus: true, input_html: { autocomplete: "email" } %>
+    <%= f.input :locale, collection: User.available_locales, label_method: ->(l) { t("locales.#{l}") }, include_blank: false, wrapper: :bulma_select %>
+    <%= f.input :role, collection: User.roles.keys, label_method: ->(r) { t("roles.#{r}") }, include_blank: false, wrapper: :bulma_select %>
+
+    <% if user.new_record? %>
+      <div class="field">
+        <div class="control">
+          <label class="checkbox">
+            <%= check_box_tag "invite_user", "true", params[:invite_user].present? %>
+            <%= t(".invite_user") %>
+          </label>
+        </div>
+      </div>
+    <% end %>
+  </section>
+
+  <footer class="modal-card-foot is-justify-content-flex-end">
+    <button type="button" class="button mr-2" data-action="click->modal#close">
+      <%= t(".cancel") %>
+    </button>
+    <%= f.button :submit, class: "button is-success" %>
+  </footer>
+<% end %>

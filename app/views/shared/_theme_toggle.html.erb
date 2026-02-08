@@ -1,0 +1,23 @@
+<div data-controller="theme-toggle" class="is-flex">
+  <button
+    data-action="mousedown->theme-toggle#toggle"
+    class="button is-text is-hidden"
+    data-theme-toggle-target="darkIcon"
+    aria-label="<%= t(".aria_switch_to_light") %>"
+  >
+    <span class="icon">
+      <%= render "shared/icons/dark_mode" %>
+    </span>
+  </button>
+
+  <button
+    data-action="mousedown->theme-toggle#toggle"
+    class="button is-text"
+    data-theme-toggle-target="lightIcon"
+    aria-label="<%= t(".aria_switch_to_dark") %>"
+  >
+    <span class="icon">
+      <%= render "shared/icons/light_mode" %>
+    </span>
+  </button>
+</div>

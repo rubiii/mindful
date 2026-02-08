@@ -1,0 +1,58 @@
+# PostgreSQL. Versions 14.0 and up are supported.
+#
+#   To use PostgreSQL locally, you can either:
+#   1. Use Docker Compose: docker compose up -d
+#   2. Install PostgreSQL locally (see README.md for instructions)
+#
+#   This file is gitignored. See config/database.example.yml for a template.
+#
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  # Pool size accounts for:
+  # - RAILS_MAX_THREADS (web server threads, default: 5)
+  # - Good Job threads (default: 5)
+  # - Good Job utility connections (2 for LISTEN/NOTIFY, cron)
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 }.to_i + ENV.fetch("GOOD_JOB_MAX_THREADS") { 5 }.to_i + 2 %>
+  timeout: 5000
+
+development:
+  <<: *default
+  database: mindful_development
+  # For Docker Compose (default):
+  host: localhost
+  username: mindful
+  password: mindful
+  # For local PostgreSQL installation, uncomment and adjust:
+  # host: localhost
+  # username: <%= ENV['USER'] %>
+  # password:
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  <<: *default
+  database: mindful_test
+  host: localhost
+  username: mindful
+  password: mindful
+
+# Production uses DATABASE_URL environment variables
+# Set individual URLs for each database in your deployment configuration:
+#   DATABASE_URL=postgresql://user:pass@host:5432/mindful_production
+#   CACHE_DATABASE_URL=postgresql://user:pass@host:5432/mindful_production_cache
+#   CABLE_DATABASE_URL=postgresql://user:pass@host:5432/mindful_production_cable
+# Note: Good Job uses the primary database for job storage
+production:
+  primary:
+    <<: *default
+    url: <%= ENV['DATABASE_URL'] %>
+  cache:
+    <<: *default
+    url: <%= ENV['CACHE_DATABASE_URL'] %>
+    migrations_paths: db/cache_migrate
+  cable:
+    <<: *default
+    url: <%= ENV['CABLE_DATABASE_URL'] %>
+    migrations_paths: db/cable_migrate

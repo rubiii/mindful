@@ -1,0 +1,5 @@
+<%= turbo_stream.append "users" do %>
+  <%= render @users %>
+<% end %>
+
+<%= refresh_infinite_loading %>

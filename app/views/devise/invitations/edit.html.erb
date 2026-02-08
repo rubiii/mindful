@@ -1,0 +1,23 @@
+<h2 class="title is-2"><%= t(".header") %></h2>
+
+<%= simple_form_for(resource, as: resource_name, url: invitation_path(resource_name), html: { method: :put }) do |f| %>
+  <%= f.error_notification %>
+  <%= f.hidden_field :invitation_token, readonly: true %>
+
+  <% if f.object.class.require_password_on_accepting %>
+    <div class="block">
+      <%= f.input :password,
+                  required: true,
+                  autofocus: true,
+                  input_html: { autocomplete: "new-password" } %>
+
+      <%= f.input :password_confirmation,
+                  required: true,
+                  input_html: { autocomplete: "new-password" } %>
+    </div>
+  <% end %>
+
+  <div class="block">
+    <%= f.button :submit, t(".submit_button"), class: "is-primary" %>
+  </div>
+<% end %>

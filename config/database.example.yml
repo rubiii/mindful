@@ -1,0 +1,50 @@
+# Copy this to config/database.yml and customize for your environment
+# The database.yml file is gitignored to keep credentials secure
+
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  # Pool size accounts for:
+  # - RAILS_MAX_THREADS (web server threads, default: 5)
+  # - Good Job threads (default: 5)
+  # - Good Job utility connections (2 for LISTEN/NOTIFY, cron)
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 }.to_i + ENV.fetch("GOOD_JOB_MAX_THREADS") { 5 }.to_i + 2 %>
+  timeout: 5000
+
+development:
+  <<: *default
+  database: mindful_development
+  # For Docker Compose (default):
+  host: localhost
+  username: mindful
+  password: mindful
+  # For local PostgreSQL installation:
+  # host: localhost
+  # username: <%= ENV['USER'] %>
+  # password:
+
+test:
+  <<: *default
+  database: mindful_test
+  host: localhost
+  username: mindful
+  password: mindful
+
+# Production uses DATABASE_URL environment variables
+# Set individual URLs for each database in your deployment configuration:
+#   DATABASE_URL=postgresql://user:pass@host:5432/mindful_production
+#   CACHE_DATABASE_URL=postgresql://user:pass@host:5432/mindful_production_cache
+#   CABLE_DATABASE_URL=postgresql://user:pass@host:5432/mindful_production_cable
+# Note: Good Job uses the primary database for job storage
+production:
+  primary:
+    <<: *default
+    url: <%= ENV['DATABASE_URL'] %>
+  cache:
+    <<: *default
+    url: <%= ENV['CACHE_DATABASE_URL'] %>
+    migrations_paths: db/cache_migrate
+  cable:
+    <<: *default
+    url: <%= ENV['CABLE_DATABASE_URL'] %>
+    migrations_paths: db/cable_migrate

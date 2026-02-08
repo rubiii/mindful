@@ -1,0 +1,61 @@
+de:
+  roles:
+    user: User
+    admin: Admin
+  locales:
+    de: Deutsch
+    en: Englisch
+  activerecord:
+    attributes:
+      user:
+        locale: Sprache
+  header:
+    theme_toggle: Theme wechseln
+    sign_out: Abmelden
+  shared:
+    confirm_modal:
+      title: Aktion bestätigen
+      confirm: Bestätigen
+      cancel: Abbrechen
+      aria_close: Dialog schließen
+    modal:
+      aria_close: Dialog schließen
+    theme_toggle:
+      aria_switch_to_dark: Zum Dunkelmodus wechseln
+      aria_switch_to_light: Zum Hellmodus wechseln
+  admin:
+    users:
+      index:
+        add_user: Neuer User
+        filter_by_account_state: Filter nach Status
+        all: Alle
+        th:
+          email: E-Mail
+          actions: Aktionen
+          locale: Sprache
+          role: Rolle
+          account_state: Status
+      user:
+        account_state:
+          active: Aktiv
+          locked: Gesperrt
+          confirmation_pending: Bestätigung ausstehend
+          invitation_pending: Einladung ausstehend
+          active_password_reset: Passwort zurücksetzend
+        delete: Löschen
+        confirm_delete: Bitte bestätigen Sie das Löschen des Users mit der E-Mail »%{email}«.
+        edit: Bearbeiten
+      create:
+        success: User wurde erstellt.
+      update:
+        success: User wurde aktualisiert.
+      destroy:
+        success: User wurde gelöscht.
+        failure: User konnte nicht gelöscht werden.
+      form:
+        cancel: Abbrechen
+        invite_user: User per E-Mail einladen
+      new:
+        title: Neuer User
+      edit:
+        title: User bearbeiten

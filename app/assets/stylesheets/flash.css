@@ -1,0 +1,24 @@
+#flash {
+  display: flex;
+  flex-direction: column;
+  flex-flow: column-reverse;
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  bottom: 2rem;
+  width: 20rem;
+  pointer-events: none;
+  z-index: 40;
+
+  .message {
+    margin-bottom: .5rem;
+    transition: opacity 0.3s ease-in-out;
+    cursor: pointer;
+    pointer-events: auto;
+    box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
+
+    &.fade-out {
+      opacity: 0;
+    }
+  }
+}

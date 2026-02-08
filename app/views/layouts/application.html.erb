@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="<%= I18n.locale %>">
+  <head>
+    <title><%= content_for(:title) || "mindful" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="mindful">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <section id="flash" aria-label="Notifications">
+      <%= render "shared/flash" %>
+    </section>
+
+    <header class="navbar has-shadow is-flex is-align-items-center px-6 py-4">
+      <div class="is-flex-grow-1 is-flex is-align-items-center">
+        <% if user_signed_in? %>
+          <div class="mr-6">
+            <%= link_to "Home", root_path %>
+          </div>
+
+          <% if policy(User).index? %>
+            <div class="is-flex is-align-items-center">
+              <%# todo; make text bolder using bulma %>
+              <span class="has-text-weight-bold mr-1">Admin:</span>
+              <%= link_to "Users", admin_users_path %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+
+      <div class="is-flex is-align-items-center">
+        <% if user_signed_in? %>
+          <div class="mr-6">
+            <%= current_user.email %>
+          </div>
+        <% end %>
+
+        <%= tooltip t("header.theme_toggle") do %>
+          <%= render "shared/theme_toggle" %>
+        <% end %>
+
+        <% if user_signed_in? %>
+          <%= tooltip t("header.sign_out") do %>
+            <%= button_to destroy_user_session_path, method: :delete, class: "button is-text", aria: { label: t("header.sign_out") } do %>
+              <%= icon :sign_out %>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    </header>
+
+    <main class="<%= user_signed_in? ? "py-5 px-6" : "section" %>">
+      <% if user_signed_in? %>
+        <%= yield %>
+      <% else %>
+        <div class="columns is-centered">
+          <div class="column is-5-tablet is-4-desktop">
+            <%= yield %>
+          </div>
+        </div>
+      <% end %>
+    </main>
+
+    <%= render "shared/confirm_modal" %>
+  </body>
+</html>
