@@ -1,0 +1,8 @@
+test:
+  default_mail_from: "mindful <noreply@example.com>"
+
+development:
+  default_mail_from: "mindful <noreply@localhost>"
+
+production:
+  default_mail_from: "<%= ENV['DEFAULT_MAIL_FROM'] %>"

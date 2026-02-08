@@ -1,0 +1,18 @@
+<% flash.each do |type, message| %>
+  <%
+    color_class = case type.to_s
+                  when "notice" then "is-success"
+                  when "alert" then "is-danger"
+                  else "is-info"
+                  end
+  %>
+  <article
+    class="message <%= color_class %>"
+    data-controller="flash"
+    data-action="click->flash#dismiss"
+  >
+    <div class="message-body">
+      <%= message %>
+    </div>
+  </article>
+<% end %>

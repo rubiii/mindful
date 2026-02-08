@@ -1,0 +1,14 @@
+# Omakase Ruby styling for Rails
+inherit_gem: { rubocop-rails-omakase: rubocop.yml }
+
+# Overwrite or add rules to create your own house style
+#
+# # Use `[a, [b, c]]` not `[ a, [ b, c ] ]`
+# Layout/SpaceInsideArrayLiteralBrackets:
+#   Enabled: false
+
+# Enforce frozen string literals for better performance and memory usage.
+# Frozen strings prevent object duplication and make strings immutable by default,
+# which is a Rails best practice and improves application performance.
+Style/FrozenStringLiteralComment:
+  Enabled: true

@@ -1,0 +1,15 @@
+<h2 class="title is-2"><%= t(".header") %></h2>
+
+<%= simple_form_for(resource, as: resource_name, url: invitation_path(resource_name), html: { method: :post }) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="block">
+    <% resource.class.invite_key_fields.each do |field| -%>
+      <%= f.input field %>
+    <% end -%>
+  </div>
+
+  <div class="block">
+    <%= f.button :submit, t(".submit_button"), class: "is-primary" %>
+  </div>
+<% end %>

@@ -1,0 +1,26 @@
+<div
+  id="confirm-modal"
+  class="modal"
+  data-controller="confirm"
+  data-confirm-default-title-value="<%= t(".title") %>"
+  data-confirm-default-confirm-label-value="<%= t(".confirm") %>"
+  data-confirm-default-cancel-label-value="<%= t(".cancel") %>"
+>
+  <div class="modal-background" data-action="click->confirm#cancel"></div>
+
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title" data-confirm-target="title"></p>
+      <button class="delete" aria-label="<%= t(".aria_close") %>" data-action="click->confirm#cancel"></button>
+    </header>
+
+    <section class="modal-card-body">
+      <p data-confirm-target="message"></p>
+    </section>
+
+    <footer class="modal-card-foot is-justify-content-flex-end">
+      <button class="button mr-2" data-confirm-target="cancel" data-action="click->confirm#cancel"></button>
+      <button class="button is-danger" data-confirm-target="confirm" data-action="click->confirm#proceed"></button>
+    </footer>
+  </div>
+</div>

@@ -1,0 +1,62 @@
+<div class="level">
+  <div class="level-left">
+    <div class="level-item">
+      <h1 class="title">Users</h1>
+    </div>
+  </div>
+  <div class="level-right">
+    <div class="level-item">
+      <%= link_to t(".add_user"), new_admin_user_path, class: "button is-primary is-small", data: { turbo_frame: "modal" } %>
+    </div>
+  </div>
+</div>
+
+<div class="box">
+  <%= form_with url: admin_users_path, method: :get, data: { controller: "form", turbo_frame: "_top", turbo_action: "advance" } do |f| %>
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <%= f.label :account_state, t(".filter_by_account_state"), class: "label" %>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control">
+            <div class="select">
+              <%= f.select :account_state,
+                  options_for_select([
+                    [t(".all"), ""],
+                    [t("admin.users.user.account_state.active"), "active"],
+                    [t("admin.users.user.account_state.invitation_pending"), "invitation_pending"],
+                    [t("admin.users.user.account_state.active_password_reset"), "active_password_reset"]
+                  ], params[:account_state]),
+                  {},
+                  data: { action: "change->form#submit" } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<div class="table-container">
+  <table class="table is-fullwidth is-striped is-hoverable">
+    <thead>
+      <tr>
+        <th><%= t(".th.email") %></th>
+        <th><%= t(".th.locale") %></th>
+        <th><%= t(".th.role") %></th>
+        <th><%= t(".th.account_state") %></th>
+        <th><span class="is-sr-only"><%= t(".th.actions") %></span></th>
+      </tr>
+    </thead>
+    <tbody id="users">
+      <% @users.each do |user| %>
+        <%= render user %>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<%= infinite_loading %>
+
+<%= turbo_frame_tag "modal" %>

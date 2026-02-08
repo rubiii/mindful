@@ -1,0 +1,2 @@
+<%= turbo_stream.remove @user if @user.destroyed? %>
+<%= turbo_stream.append "flash", partial: "shared/flash" %>
