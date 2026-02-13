@@ -2,16 +2,16 @@
 service: mindful
 
 # Name of the container image (use your-user/app-name on external registries).
-image: mindful
+image: ghcr.io/rubiii/mindful
 
 # Deploy to these servers.
 servers:
   web:
-    - 192.168.0.1
-  # job:
-  #   hosts:
-  #     - 192.168.0.1
-  #   cmd: bin/jobs
+    - 46.224.204.243
+  job:
+    hosts:
+      - 46.224.204.243
+    cmd: bin/jobs
 
 # Enable SSL auto certification via Let's Encrypt and allow for multiple apps on a single web server.
 # If used with Cloudflare, set encryption mode in SSL/TLS setting to "Full" to enable CF-to-app encryption.
@@ -20,31 +20,29 @@ servers:
 #
 # Don't use this when deploying to multiple web servers (then you have to terminate SSL at your load balancer).
 #
-# proxy:
-#   ssl: true
-#   host: app.example.com
+proxy:
+  ssl: true
+  host: mindful-rails.org
 
 # Where you keep your container images.
 registry:
-  # Alternatives: hub.docker.com / registry.digitalocean.com / ghcr.io / ...
-  server: localhost:5555
-
-  # Needed for authenticated registries.
-  # username: your-user
-
-  # Always use an access token rather than real password when possible.
-  # password:
-  #   - KAMAL_REGISTRY_PASSWORD
+  server: ghcr.io
+  username: rubiii
+  password:
+    - KAMAL_REGISTRY_PASSWORD
 
 # Inject ENV variables into containers (secrets come from .kamal/secrets).
 env:
   secret:
     - RAILS_MASTER_KEY
-    # Uncomment when using external managed database (Option B below):
-    # - DATABASE_URL
-    # - CACHE_DATABASE_URL
-
-    # - CABLE_DATABASE_URL
+    - DATABASE_URL
+    - CACHE_DATABASE_URL
+    - CABLE_DATABASE_URL
+    - HETZNER_ACCESS_KEY_ID
+    - HETZNER_SECRET_ACCESS_KEY
+    - HETZNER_BUCKET
+    - HETZNER_ENDPOINT
+    - HETZNER_REGION
   clear:
     # Good Job runs in async mode (jobs execute in the web server process)
     # This is configured in config/environments/production.rb
@@ -60,7 +58,7 @@ env:
     # WEB_CONCURRENCY: 2
 
     # Log everything from Rails
-    # RAILS_LOG_LEVEL: debug
+    RAILS_LOG_LEVEL: info
 
 # Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
 # "bin/kamal logs -r job" will tail logs from the first server in the job section.
@@ -108,30 +106,28 @@ builder:
 # Pros: Simple setup, everything managed by Kamal
 # Cons: No automatic backups, runs on same server, manual scaling
 #
-# accessories:
-#   postgres:
-#     image: postgres:18.2-alpine
-#     host: 192.168.0.1
-#     port: "127.0.0.1:5432:5432"
-#     env:
-#       clear:
-#         POSTGRES_USER: mindful
-#         POSTGRES_DB: mindful_production
-#       secret:
-#         - POSTGRES_PASSWORD
-#     directories:
-#       - data:/var/lib/postgresql/data
-#
+accessories:
+  postgres:
+    image: postgres:16-alpine
+    host: 46.224.204.243
+    port: "127.0.0.1:5432:5432"
+    env:
+      clear:
+        POSTGRES_USER: mindful
+        POSTGRES_DB: mindful_production
+      secret:
+        - POSTGRES_PASSWORD
+    directories:
+      - data:/var/lib/postgresql/data
+
 # Then create the additional databases manually:
 #   kamal accessory exec postgres -i --reuse "psql -U mindful -c 'CREATE DATABASE mindful_production_cache;'"
-#   kamal accessory exec postgres -i --reuse "psql -U mindful -c 'CREATE DATABASE mindful_production_queue;'"
 #   kamal accessory exec postgres -i --reuse "psql -U mindful -c 'CREATE DATABASE mindful_production_cable;'"
 #
 # Set these in .kamal/secrets:
 #   POSTGRES_PASSWORD=$(openssl rand -base64 32)
 #   DATABASE_URL=postgresql://mindful:${POSTGRES_PASSWORD}@mindful-postgres:5432/mindful_production
 #   CACHE_DATABASE_URL=postgresql://mindful:${POSTGRES_PASSWORD}@mindful-postgres:5432/mindful_production_cache
-#   QUEUE_DATABASE_URL=postgresql://mindful:${POSTGRES_PASSWORD}@mindful-postgres:5432/mindful_production_queue
 #   CABLE_DATABASE_URL=postgresql://mindful:${POSTGRES_PASSWORD}@mindful-postgres:5432/mindful_production_cable
 #
 #
