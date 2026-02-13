@@ -1,0 +1,60 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy to Hetzner
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      # Secrets
+      RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+      KAMAL_REGISTRY_PASSWORD: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+
+      # Database Configuration (Constructed from POSTGRES_PASSWORD)
+      DATABASE_URL: postgresql://mindful:${{ secrets.POSTGRES_PASSWORD }}@mindful-postgres:5432/mindful_production
+      CACHE_DATABASE_URL: postgresql://mindful:${{ secrets.POSTGRES_PASSWORD }}@mindful-postgres:5432/mindful_production_cache
+      CABLE_DATABASE_URL: postgresql://mindful:${{ secrets.POSTGRES_PASSWORD }}@mindful-postgres:5432/mindful_production_cable
+
+      # Object Storage
+      HETZNER_ACCESS_KEY_ID: ${{ secrets.HETZNER_ACCESS_KEY_ID }}
+      HETZNER_SECRET_ACCESS_KEY: ${{ secrets.HETZNER_SECRET_ACCESS_KEY }}
+      HETZNER_BUCKET: ${{ secrets.HETZNER_BUCKET }}
+      HETZNER_REGION: ${{ secrets.HETZNER_REGION }}
+      HETZNER_ENDPOINT: ${{ secrets.HETZNER_ENDPOINT }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.4.8
+          bundler-cache: true
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Disable Host Key Checking
+        run: |
+          mkdir -p ~/.ssh
+          echo "Host *" > ~/.ssh/config
+          echo "  StrictHostKeyChecking no" >> ~/.ssh/config
+
+      - name: Install dependencies
+        run: bundle install
+
+      - name: Deploy
+        run: bin/kamal deploy
