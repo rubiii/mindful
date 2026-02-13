@@ -1,14 +1,13 @@
-name: CI
+name: Continuous Integration
 
 on:
-  pull_request:
   push:
     branches: [ main ]
+  pull_request:
 
 jobs:
   scan_ruby:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -26,7 +25,6 @@ jobs:
 
   scan_js:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -61,10 +59,9 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-
     services:
       postgres:
-        image: postgres:18.2-alpine
+        image: postgres:16-alpine
         env:
           POSTGRES_USER: mindful
           POSTGRES_PASSWORD: mindful
@@ -76,11 +73,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-    #  redis:
-    #    image: valkey/valkey:8
-    #    ports:
-    #      - 6379:6379
-    #    options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -94,8 +86,6 @@ jobs:
         env:
           RAILS_ENV: test
           DATABASE_URL: postgresql://mindful:mindful@localhost:5432/mindful_test
-          # RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-          # REDIS_URL: redis://localhost:6379/0
         run: bin/rails db:test:prepare test
 
       - name: Upload coverage report
@@ -108,10 +98,9 @@ jobs:
 
   system-test:
     runs-on: ubuntu-latest
-
     services:
       postgres:
-        image: postgres:18.2-alpine
+        image: postgres:16-alpine
         env:
           POSTGRES_USER: mindful
           POSTGRES_PASSWORD: mindful
@@ -123,11 +112,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-    #  redis:
-    #    image: valkey/valkey:8
-    #    ports:
-    #      - 6379:6379
-    #    options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -141,8 +125,6 @@ jobs:
         env:
           RAILS_ENV: test
           DATABASE_URL: postgresql://mindful:mindful@localhost:5432/mindful_test
-          # RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-          # REDIS_URL: redis://localhost:6379/0
         run: bin/rails db:test:prepare test:system
 
       - name: Keep screenshots from failed system tests
@@ -152,3 +134,58 @@ jobs:
           name: screenshots
           path: ${{ github.workspace }}/tmp/screenshots
           if-no-files-found: ignore
+
+  deploy:
+    name: Deploy to Hetzner
+    if: github.ref == 'refs/heads/main'
+    needs: [scan_ruby, scan_js, lint, test, system-test]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      # Secrets
+      RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+
+      # Database Configuration
+      DATABASE_URL: postgresql://mindful:${{ secrets.POSTGRES_PASSWORD }}@mindful-postgres:5432/mindful_production
+      CACHE_DATABASE_URL: postgresql://mindful:${{ secrets.POSTGRES_PASSWORD }}@mindful-postgres:5432/mindful_production_cache
+      CABLE_DATABASE_URL: postgresql://mindful:${{ secrets.POSTGRES_PASSWORD }}@mindful-postgres:5432/mindful_production_cable
+
+      # Object Storage
+      HETZNER_ACCESS_KEY_ID: ${{ secrets.HETZNER_ACCESS_KEY_ID }}
+      HETZNER_SECRET_ACCESS_KEY: ${{ secrets.HETZNER_SECRET_ACCESS_KEY }}
+      HETZNER_BUCKET: ${{ secrets.HETZNER_BUCKET }}
+      HETZNER_REGION: ${{ secrets.HETZNER_REGION }}
+      HETZNER_ENDPOINT: ${{ secrets.HETZNER_ENDPOINT }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.4.8
+          bundler-cache: true
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Disable Host Key Checking
+        run: |
+          mkdir -p ~/.ssh
+          echo "Host *" > ~/.ssh/config
+          echo "  StrictHostKeyChecking no" >> ~/.ssh/config
+
+      - name: Install dependencies
+        run: bundle install
+
+      - name: Deploy
+        env:
+          KAMAL_REGISTRY_PASSWORD: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}
+        run: bin/kamal deploy
