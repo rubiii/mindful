@@ -10,15 +10,15 @@ export default class extends Controller {
   }
 
   connect() {
-    this.originalConfirm = Turbo.confirm
-    Turbo.setConfirmMethod(this.showConfirmDialog.bind(this))
+    this.originalConfirm = Turbo.config.forms.confirm
+    Turbo.config.forms.confirm = this.showConfirmDialog.bind(this)
 
     // this.handleKeydown = this.handleKeydown.bind(this)
     // window.addEventListener("keydown", this.handleKeydown)
   }
 
   disconnect() {
-    Turbo.setConfirmMethod(this.originalConfirm)
+    Turbo.config.forms.confirm = this.originalConfirm
     // window.removeEventListener("keydown", this.handleKeydown)
   }
 
