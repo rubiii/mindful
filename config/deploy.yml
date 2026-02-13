@@ -28,8 +28,7 @@ proxy:
 registry:
   server: ghcr.io
   username: rubiii
-  password:
-    - KAMAL_REGISTRY_PASSWORD
+  password: <%= ENV["KAMAL_REGISTRY_PASSWORD"] %>
 
 # Inject ENV variables into containers (secrets come from .kamal/secrets).
 env:
@@ -139,7 +138,7 @@ accessories:
 # Cons: Additional cost, external dependency
 #
 # 1. Create a PostgreSQL 18+ instance with your provider
-# 2. Create four databases: mindful_production, mindful_production_cache, 
+# 2. Create four databases: mindful_production, mindful_production_cache,
 #    mindful_production_queue, mindful_production_cable
 # 3. Set these environment variables in .kamal/secrets (uncomment in env.secret above):
 #   DATABASE_URL=postgresql://user:password@host:5432/mindful_production
