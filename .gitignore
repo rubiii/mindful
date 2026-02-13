@@ -46,5 +46,8 @@
 # Ignore database configuration with credentials.
 /config/database.yml
 
+# Ignore Kamal secrets.
+/.kamal/secrets
+
 # Ignore test coverage reports.
 /coverage/
