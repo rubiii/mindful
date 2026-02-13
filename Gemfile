@@ -42,6 +42,9 @@ gem "thruster", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 1.2"
 
+# Use S3 for Active Storage (required for Hetzner Object Storage)
+gem "aws-sdk-s3", require: false
+
 # Rails form library [https://github.com/heartcombo/simple_form]
 gem "simple_form", "~> 5.4"
 
