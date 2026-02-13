@@ -13,4 +13,13 @@ ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../Gemfile", __dir__)
 require "rubygems"
 require "bundler/setup"
 
+secrets_file = File.expand_path("../.kamal/secrets", __dir__)
+if File.exist?(secrets_file)
+  File.readlines(secrets_file).each do |line|
+    next if line.start_with?("#") || line.strip.empty?
+    key, value = line.strip.split("=", 2)
+    ENV[key] = value if key && value
+  end
+end
+
 load Gem.bin_path("kamal", "kamal")
