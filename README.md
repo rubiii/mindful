@@ -1,5 +1,8 @@
 # mindful
 
+[![CI](https://github.com/rubiii/mindful/actions/workflows/ci.yml/badge.svg)](https://github.com/rubiii/mindful/actions/workflows/ci.yml)
+[![Dependabot Status](https://img.shields.io/badge/Dependabot-enabled-brightgreen.svg)](https://github.com/rubiii/mindful/network/updates)
+
 This is a Ruby on Rails 8 application template.
 
 ## Prerequisites
