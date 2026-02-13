@@ -165,6 +165,32 @@ You can run the full CI workflow locally, which includes setup, style checks, se
 bin/ci
 ```
 
+## Deployment
+
+This application is deployed on Hetzner Cloud using [Kamal](https://kamal-deploy.org).
+
+### Routine Commands
+
+Deploy changes:
+
+```bash
+bin/kamal deploy
+```
+
+View server logs:
+
+```bash
+bin/kamal logs -f
+```
+
+Open Rails console on server:
+
+```bash
+bin/kamal app exec -i 'bin/rails console'
+```
+
+For full setup instructions (including secrets and initial provisioning), see the [Deployment Guide](/docs/deployment.md).
+
 ## Documentation
 
 For detailed guidance on specific topics, see:
@@ -175,3 +201,4 @@ For detailed guidance on specific topics, see:
 - [Authorization (Pundit)](/docs/authorization.md)
 - [Testing Guidelines](/docs/testing.md)
 - [Database Best Practices](/docs/database.md)
+- [Documentation Guidelines](/docs/documentation.md)

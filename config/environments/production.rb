@@ -24,7 +24,7 @@ Rails.application.configure do
   # config.asset_host = "http://assets.example.com"
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :local
+  config.active_storage.service = :hetzner
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
   # config.assume_ssl = true
@@ -64,7 +64,7 @@ Rails.application.configure do
   #        hosts:
   #          - 192.168.0.1
   #        cmd: bundle exec good_job start
-  config.good_job.execution_mode = :async
+  config.good_job.execution_mode = :external
   config.good_job.max_threads = 5
   config.good_job.poll_interval = 30
 
