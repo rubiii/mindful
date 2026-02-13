@@ -11,5 +11,5 @@ pin "@hotwired/stimulus-loading", to: "stimulus-loading.js"
 pin_all_from "app/javascript/controllers", under: "controllers"
 
 # https://atomiks.github.io/tippyjs/v6/getting-started/
-pin "tippy.js", to: "https://esm.sh/tippy.js@6.3.7"
-pin "@popperjs/core", to: "https://esm.sh/@popperjs/core@2.11.8"
+pin "tippy.js" # @6.3.7
+pin "@popperjs/core", to: "popperjs_core.js" # @2.11.8
