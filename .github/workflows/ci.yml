@@ -190,5 +190,15 @@ jobs:
 
       - name: Deploy
         env:
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          DATABASE_URL: postgresql://mindful:${{ secrets.POSTGRES_PASSWORD }}@mindful-postgres:5432/mindful_production
+          CACHE_DATABASE_URL: postgresql://mindful:${{ secrets.POSTGRES_PASSWORD }}@mindful-postgres:5432/mindful_production_cache
+          CABLE_DATABASE_URL: postgresql://mindful:${{ secrets.POSTGRES_PASSWORD }}@mindful-postgres:5432/mindful_production_cable
+          HETZNER_ACCESS_KEY_ID: ${{ secrets.HETZNER_ACCESS_KEY_ID }}
+          HETZNER_SECRET_ACCESS_KEY: ${{ secrets.HETZNER_SECRET_ACCESS_KEY }}
+          HETZNER_BUCKET: ${{ secrets.HETZNER_BUCKET }}
+          HETZNER_REGION: ${{ secrets.HETZNER_REGION }}
+          HETZNER_ENDPOINT: ${{ secrets.HETZNER_ENDPOINT }}
           KAMAL_REGISTRY_PASSWORD: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}
         run: bin/kamal deploy
