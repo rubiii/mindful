@@ -11,24 +11,24 @@ module Admin
       end
 
       it "admin can filter users by active state" do
-        pending_user = create(:user, email: "pending@example.com", invitation_sent_at: Time.current)
+        invited_user = create(:user, email: "pending@example.com", invitation_sent_at: Time.current, invitation_token: "valid_token")
 
         sign_in_as @admin, visit_path: admin_users_path
 
-        assert_text pending_user.email
+        assert_text invited_user.email
         assert_text @user.email
 
         # Filter by invitation_pending
         select "Invitation pending", from: "account_state"
 
         # Wait for Turbo Frame to update
-        assert_text pending_user.email
+        assert_text invited_user.email
         refute_text @user.email
         assert_accessible
       end
 
       it "admin can clear filter to see all users" do
-        invited_user = create(:user, invitation_sent_at: Time.current)
+        invited_user = create(:user, invitation_sent_at: Time.current, invitation_token: "valid_token")
 
         sign_in_as @admin, visit_path: admin_users_path
 
