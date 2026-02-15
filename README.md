@@ -167,7 +167,34 @@ bin/ci
 
 ## Deployment
 
-This application is deployed on Hetzner Cloud using [Kamal](https://kamal-deploy.org).
+This application is deployed on Hetzner Cloud using [Kamal 2](https://kamal-deploy.org).
+
+### Secrets Configuration
+
+Kamal 2 requires secrets to be set as environment variables. The `.kamal/secrets` file documents which variables are needed and how they're imported.
+
+For local deployments, use your `.env` file:
+
+1. **Copy the example file:**
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **Edit `.env` and fill in the Kamal deployment secrets:**
+   - Scroll to the "Kamal Deployment Secrets" section
+   - Copy `RAILS_MASTER_KEY` from your `config/master.key` file
+   - Generate `POSTGRES_PASSWORD` with: `openssl rand -hex 32`
+   - Get `KAMAL_REGISTRY_PASSWORD` from https://github.com/settings/tokens
+   - Fill in your Hetzner Object Storage credentials
+
+3. **Deploy:**
+   ```bash
+   bin/kamal deploy
+   ```
+
+The `bin/kamal` wrapper automatically loads your secrets from the `.env` file.
+
+For CI/CD deployments, set these as repository secrets instead. See the [Deployment Guide](/docs/deployment.md) for complete setup instructions.
 
 ### Routine Commands
 
@@ -189,7 +216,7 @@ Open Rails console on server:
 bin/kamal app exec -i 'bin/rails console'
 ```
 
-For full setup instructions (including secrets and initial provisioning), see the [Deployment Guide](/docs/deployment.md).
+For full setup instructions (including initial provisioning and secret generation), see the [Deployment Guide](/docs/deployment.md).
 
 ## Documentation
 
