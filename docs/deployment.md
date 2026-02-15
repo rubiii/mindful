@@ -92,9 +92,9 @@ For local deployments, use the `.env` file to manage your secrets:
    - `RAILS_MASTER_KEY` - Copy from your `config/master.key` file
    - `KAMAL_REGISTRY_PASSWORD` - Your GitHub Personal Access Token
    - `POSTGRES_PASSWORD` - Generate with: `openssl rand -hex 32`
-   - `DATABASE_URL` - Use the format shown, replacing the password
-   - `CACHE_DATABASE_URL` - Use the format shown, replacing the password
-   - `CABLE_DATABASE_URL` - Use the format shown, replacing the password
+   - `DATABASE_URL` - **Uncomment** and use the format shown, replacing the password
+   - `CACHE_DATABASE_URL` - **Uncomment** and use the format shown, replacing the password
+   - `CABLE_DATABASE_URL` - **Uncomment** and use the format shown, replacing the password
    - `HETZNER_*` - Your Hetzner Object Storage credentials
 
 3. **Deploy:**
@@ -104,7 +104,11 @@ For local deployments, use the `.env` file to manage your secrets:
 
 The `bin/kamal` wrapper automatically loads variables from your `.env` file using dotenv-rails.
 
-**Note:** The `.env` file is already gitignored, so your secrets are safe.
+**Important Notes:**
+- The DATABASE_URL variables should remain **commented out** for local development (Rails uses `config/database.yml` instead)
+- Only **uncomment** them when you need to deploy with Kamal
+- After deploying, you can comment them out again to avoid conflicts with local development
+- The `.env` file is already gitignored, so your secrets are safe
 
 #### Setting Up Secrets in CI/CD
 
