@@ -18,6 +18,8 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-gpu")
+    options.add_argument("--disable-search-engine-choice-screen")
+    options.add_argument("--disable-site-isolation-trials")
 
     # Hide automation indicators
     options.add_argument("--disable-blink-features=AutomationControlled")
