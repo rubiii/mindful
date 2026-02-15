@@ -11,5 +11,6 @@ pin "@hotwired/stimulus-loading", to: "stimulus-loading.js"
 pin_all_from "app/javascript/controllers", under: "controllers"
 
 # https://atomiks.github.io/tippyjs/v6/getting-started/
-pin "tippy.js" # @6.3.7
-pin "@popperjs/core", to: "popperjs_core.js" # @2.11.8
+# Using Skypack bundled versions for CSP compliance (locally vendored)
+pin "tippy.js", to: "tippy.js" # @6.3.7
+pin "/-/@popperjs/core@v2.11.2-7HHj50CzBHDvkIAwMPdO/dist=es2019,mode=imports/optimized/@popperjs/core.js", to: "popper-core.js" # @2.11.2
