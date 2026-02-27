@@ -49,7 +49,7 @@ gem "aws-sdk-s3", require: false
 gem "simple_form", "~> 5.4"
 
 # Agnostic pagination in plain ruby [https://github.com/ddnexus/pagy]
-gem "pagy", "~> 43.2"
+gem "pagy", "~> 43.3"
 
 # Rack middleware for blocking & throttling [https://github.com/rack/rack-attack]
 gem "rack-attack"
